@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow"><span class="pulse-dot"></span> Détection en temps réel</span>
+      <h1>L'IA qui protège les <span class="accent">citoyens camerounais</span> des cybermenaces</h1>
+      <p class="hero-sub">
+        CAMSAFE AI détecte les liens de phishing, les messages frauduleux et les contenus suspects
+        générés par IA, pour renforcer la cybersécurité et le patriotisme numérique au Cameroun.
+      </p>
+      <div class="hero-actions">
+        <a href="{{ url_for('check_url') }}" class="btn btn-primary btn-lg">Vérifier un lien maintenant</a>
+        <a href="{{ url_for('about') }}" class="btn btn-outline btn-lg">Découvrir le projet</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">{{ stats.total_analyses }}</div>
+          <div class="label">Analyses effectuées</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">{{ stats.high_risk }}</div>
+          <div class="label">Menaces à haut risque</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">{{ stats.community_reports }}</div>
+          <div class="label">Signalements citoyens</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="radar-panel">
+      <div class="radar-panel-header">
+        <span>Radar de cybermenaces</span>
+        <span class="live"><span class="pulse-dot"></span> LIVE</span>
+      </div>
+      <div class="radar-visual"></div>
+      <div class="radar-feed">
+        {% for alert in recent_alerts %}
+        <div class="feed-item sev-{{ alert['severity'] }}">
+          <span class="target">{{ alert['target'] }}</span>
+          <span class="badge sev-{{ alert['severity'] }}">{{ alert['severity'] }}</span>
+        </div>
+        {% else %}
+        <div class="feed-item sev-low"><span class="target">Aucune menace critique récente</span></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Boîte à outils</span>
+      <h2>Trois façons de vérifier avant de faire confiance</h2>
+      <p>Des outils simples, pensés pour être utilisés par n'importe quel citoyen, sans connaissance technique.</p>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="icon">🔗</div>
+        <h3>Vérifier un lien</h3>
+        <p>Colle une URL reçue par SMS, WhatsApp ou email pour détecter les tentatives de phishing et les faux sites.</p>
+        <a href="{{ url_for('check_url') }}">Analyser un lien →</a>
+      </div>
+      <div class="tool-card">
+        <div class="icon">✉️</div>
+        <h3>Vérifier un message</h3>
+        <p>Analyse un SMS ou un email suspect pour repérer les techniques d'arnaque et d'ingénierie sociale.</p>
+        <a href="{{ url_for('check_message') }}">Analyser un message →</a>
+      </div>
+      <div class="tool-card">
+        <div class="icon">🎞️</div>
+        <h3>Vérifier un média</h3>
+        <p>Soumets une image ou une vidéo pour un premier signal sur d'éventuels indices de manipulation par IA.</p>
+        <a href="{{ url_for('check_media') }}">Analyser un média →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Comment ça marche</span>
+      <h2>Une analyse en quatre étapes</h2>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="step-num">1</div>
+        <h4>Tu soumets un contenu</h4>
+        <p>Lien, message ou fichier image/vidéo à vérifier.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">2</div>
+        <h4>Le moteur analyse</h4>
+        <p>Des règles de détection identifient les signaux de risque connus.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">3</div>
+        <h4>Un score est calculé</h4>
+        <p>Un verdict clair, avec les raisons expliquées en langage simple.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">4</div>
+        <h4>Tu décides en confiance</h4>
+        <p>Tu peux aussi signaler la menace à la communauté CAMSAFE.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <h2>Rejoins la lutte pour un Cameroun numérique plus sûr</h2>
+      <p>Crée un compte pour suivre tes analyses, signaler des menaces et accéder au tableau de bord communautaire.</p>
+      <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Créer un compte gratuit</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

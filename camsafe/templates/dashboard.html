@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-hero">
+    <h1>Tableau de bord des cybermenaces</h1>
+    <p>Bienvenue {{ current_user['name'] }}. Voici un aperçu de l'activité sur CAMSAFE AI.</p>
+  </div>
+
+  <div class="dash-grid">
+    <div class="metric-card">
+      <div class="num">{{ stats.total_analyses }}</div>
+      <div class="lbl">Analyses totales</div>
+    </div>
+    <div class="metric-card accent-red">
+      <div class="num">{{ stats.high_risk }}</div>
+      <div class="lbl">Menaces à haut risque</div>
+    </div>
+    <div class="metric-card accent-yellow">
+      <div class="num">{{ stats.medium_risk }}</div>
+      <div class="lbl">Menaces suspectes</div>
+    </div>
+    <div class="metric-card accent-green">
+      <div class="num">{{ stats.registered_users }}</div>
+      <div class="lbl">Utilisateurs inscrits</div>
+    </div>
+  </div>
+
+  <div class="panel-block">
+    <h3>Évolution des menaces détectées (14 derniers jours)</h3>
+    <div class="chart-wrap"><canvas id="timelineChart"></canvas></div>
+  </div>
+
+  <div class="dash-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="panel-block">
+      <h3>Répartition par type de contenu</h3>
+      <div class="chart-wrap"><canvas id="typeChart"></canvas></div>
+    </div>
+    <div class="panel-block">
+      <h3>Mes dernières analyses</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Type</th><th>Cible</th><th>Verdict</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          {% for r in my_reports %}
+          <tr>
+            <td>{{ r['kind'] }}</td>
+            <td style="max-width: 160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ r['target'] }}</td>
+            <td><span class="chip sev-{{ r['severity'] }}">{{ r['severity'] }}</span></td>
+            <td>{{ r['created_at'][:10] }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">Aucune analyse effectuée pour le moment.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+const timelineCtx = document.getElementById('timelineChart');
+new Chart(timelineCtx, {
+  type: 'line',
+  data: {
+    labels: {{ timeline.labels | tojson }},
+    datasets: [
+      { label: 'Haut risque', data: {{ timeline.high | tojson }}, borderColor: '#e8342a', backgroundColor: 'rgba(232,52,42,0.1)', tension: 0.35, fill: true },
+      { label: 'Suspect', data: {{ timeline.medium | tojson }}, borderColor: '#f2b705', backgroundColor: 'rgba(242,183,5,0.08)', tension: 0.35, fill: true },
+      { label: 'Faible', data: {{ timeline.low | tojson }}, borderColor: '#1fa65a', backgroundColor: 'rgba(31,166,90,0.08)', tension: 0.35, fill: true }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#8fa1bd', font: { family: 'JetBrains Mono', size: 10 } } } },
+    scales: {
+      x: { ticks: { color: '#5b6c88', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { ticks: { color: '#5b6c88', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' }, beginAtZero: true }
+    }
+  }
+});
+
+const typeCtx = document.getElementById('typeChart');
+new Chart(typeCtx, {
+  type: 'doughnut',
+  data: {
+    labels: {{ threat_types.labels | tojson }},
+    datasets: [{
+      data: {{ threat_types.counts | tojson }},
+      backgroundColor: ['#1fa65a', '#f2b705', '#e8342a'],
+      borderColor: '#131e30',
+      borderWidth: 3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { color: '#8fa1bd', font: { family: 'JetBrains Mono', size: 10 }, padding: 14 } } }
+  }
+});
+</script>
+{% endblock %}

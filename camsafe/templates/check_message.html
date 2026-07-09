@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Vérifier un message{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-hero">
+    <h1>Vérifier un message</h1>
+    <p>Colle le texte complet d'un SMS ou d'un email suspect. Le moteur repère les techniques classiques d'arnaque et d'ingénierie sociale.</p>
+  </div>
+
+  <div class="form-panel wide">
+    <form method="POST">
+      <div class="form-group">
+        <label for="message">Contenu du message</label>
+        <textarea id="message" name="message" required placeholder="Colle ici le message reçu...">{{ submitted_text }}</textarea>
+        <div class="form-hint">Exemple à tester : « Félicitations ! Vous avez gagné 500 000 FCFA, cliquez ici immédiatement ! »</div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Analyser le message</button>
+    </form>
+
+    {% if result %}
+    <div class="result-panel">
+      <div class="result-head">
+        <div>
+          <div class="result-verdict" style="color: {{ result.verdict_color }}">{{ result.verdict }}</div>
+          <div class="form-hint">Extrait analysé</div>
+        </div>
+        <div class="score-ring" data-score="{{ result.score }}" data-color="{{ result.verdict_color }}">
+          <span>{{ result.score }}%</span>
+        </div>
+      </div>
+      <ul class="reasons-list">
+        {% for reason in result.reasons %}
+        <li>{{ reason }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

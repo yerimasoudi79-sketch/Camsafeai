@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Signaler une menace{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-hero">
+    <h1>Signaler une menace</h1>
+    <p>Aide la communauté en signalant un lien, un numéro ou un contenu frauduleux que tu as rencontré.</p>
+  </div>
+
+  <div class="form-panel wide">
+    <form method="POST">
+      <div class="form-group">
+        <label for="kind">Type de menace</label>
+        <select id="kind" name="kind">
+          <option value="url">Lien / site web</option>
+          <option value="message">SMS / Email</option>
+          <option value="media">Image / vidéo</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="target">Élément signalé</label>
+        <input type="text" id="target" name="target" required placeholder="Lien, numéro de téléphone, nom du fichier...">
+      </div>
+      <div class="form-group">
+        <label for="description">Description (optionnel)</label>
+        <textarea id="description" name="description" placeholder="Explique ce qui s'est passé..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Envoyer le signalement</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

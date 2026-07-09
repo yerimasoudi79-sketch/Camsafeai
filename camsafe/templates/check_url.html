@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Vérifier un lien{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-hero">
+    <h1>Vérifier un lien</h1>
+    <p>Colle une URL suspecte reçue par SMS, WhatsApp, email ou réseau social. L'analyse est instantanée et ne conserve pas ton lien publiquement.</p>
+  </div>
+
+  <div class="form-panel wide">
+    <form method="POST">
+      <div class="form-group">
+        <label for="url">Lien à analyser</label>
+        <input type="text" id="url" name="url" required placeholder="https://exemple-suspect.com/offre" value="{{ submitted_url }}">
+        <div class="form-hint">Exemple à tester : mtn-cameroon-bonus-gratuit.com</div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Analyser le lien</button>
+    </form>
+
+    {% if result %}
+    <div class="result-panel">
+      <div class="result-head">
+        <div>
+          <div class="result-verdict" style="color: {{ result.verdict_color }}">{{ result.verdict }}</div>
+          <div class="form-hint">{{ result.subject }}</div>
+        </div>
+        <div class="score-ring" data-score="{{ result.score }}" data-color="{{ result.verdict_color }}">
+          <span>{{ result.score }}%</span>
+        </div>
+      </div>
+      <ul class="reasons-list">
+        {% for reason in result.reasons %}
+        <li>{{ reason }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
